@@ -45,7 +45,7 @@ unit* lua_unit::get()
 	if (ptr) return ptr.get();
 	if (c_ptr) return c_ptr;
 	if (side) {
-		return resources::gameboard->teams()[side - 1].recall_list().find_if_matches_underlying_id(uid).get();
+		return resources::gameboard->get_team(side).recall_list().find_if_matches_underlying_id(uid).get();
 	}
 	unit_map::unit_iterator ui = resources::units->find(uid);
 	if (!ui.valid()) return nullptr;
@@ -55,7 +55,7 @@ unit_ptr lua_unit::get_shared()
 {
 	if (ptr) return ptr;
 	if (side) {
-		return resources::gameboard->teams()[side - 1].recall_list().find_if_matches_underlying_id(uid);
+		return resources::gameboard->get_team(side).recall_list().find_if_matches_underlying_id(uid);
 	}
 	unit_map::unit_iterator ui = resources::units->find(uid);
 	if (!ui.valid()) return unit_ptr();
