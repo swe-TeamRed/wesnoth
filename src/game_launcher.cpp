@@ -104,8 +104,13 @@ static lg::log_domain log_enginerefac("enginerefac");
 #define LOG_RG LOG_STREAM(info, log_enginerefac)
 
 game_launcher::game_launcher(const commandline_options& cmdline_opts, const char *appname) :
+	game_launcher(new CVideo(), cmdline_opts, appname)
+{
+}
+
+game_launcher::game_launcher(CVideo* v, const commandline_options& cmdline_opts, const char *appname) :
 	cmdline_opts_(cmdline_opts),
-	video_(new CVideo()),
+	video_(v),
 	font_manager_(),
 	prefs_manager_(),
 	image_manager_(),
@@ -1013,4 +1018,7 @@ game_launcher::~game_launcher()
 		gui::dialog::delete_empty_menu();
 		sound::close_sound();
 	} catch (...) {}
+	if(!video_->faked()) {
+		delete video_;
+	}
 }

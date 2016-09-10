@@ -99,6 +99,9 @@ public:
 
 	const commandline_options & opts() const { return cmdline_opts_; }
 private:
+	// This friend declaration is for the unit tests
+	friend std::unique_ptr<game_launcher> make_fake_launcher();
+	game_launcher(CVideo* video, const commandline_options& cmdline_opts, const char* appname);
 	game_launcher(const game_launcher&);
 	void operator=(const game_launcher&);
 
@@ -108,7 +111,7 @@ private:
 
 	const commandline_options& cmdline_opts_;
 	//Never null.
-	const std::unique_ptr<CVideo> video_;
+	CVideo*const video_;
 
 	const font::manager font_manager_;
 	const preferences::manager prefs_manager_;

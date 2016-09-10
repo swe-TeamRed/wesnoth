@@ -17,6 +17,7 @@
 
 #include <boost/test/unit_test.hpp>
 
+#include "global.hpp"
 #include "config_assign.hpp"
 #include "config_cache.hpp"
 #include "editor/editor_display.hpp" // for dummy display context
@@ -152,6 +153,18 @@ tdialog* unit_test_mp_server_list()
 }
 
 } // namespace gui2
+
+std::unique_ptr<game_launcher> make_fake_launcher() {
+	std::vector<std::string> args;
+	commandline_options opts(args);
+	CVideo& vid = test_utils::get_fake_display(-1, -1).video();
+#ifdef HAVE_CXX14
+	return std::make_unique(&vid, opts, "unit_tests");
+#else
+	using ptr = std::unique_ptr<game_launcher>;
+	return ptr(new game_launcher(&vid, opts, "unit_tests"));
+#endif
+}
 
 namespace {
 
@@ -1038,13 +1051,11 @@ struct twrapper<gui2::ttransient_message>
 template<>
 struct twrapper<gui2::ttitle_screen>
 {
-	std::vector<std::string> args;
-	commandline_options opts;
-	game_launcher game;
-	twrapper() : opts(args), game(opts, "unit_tests") {}
+	std::unique_ptr<game_launcher> game;
+	twrapper() : game(make_fake_launcher()) {}
 	gui2::ttitle_screen* create()
 	{
-		return new gui2::ttitle_screen(game);
+		return new gui2::ttitle_screen(*game);
 	}
 };
 
