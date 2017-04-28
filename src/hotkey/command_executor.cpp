@@ -651,8 +651,8 @@ void execute_command(const hotkey_command& command, command_executor* executor, 
 			// look if both is not playing
 			static struct before_muted_s
 			{
-				bool playing_sound, playing_music;
-				before_muted_s() : playing_sound(false), playing_music(false) {}
+				bool /*playing_sound,*/ playing_music;
+				before_muted_s() : /*playing_sound(false), */playing_music(false) {}
 			} before_muted;
 			if (preferences::music_on())
 			{
